@@ -60,6 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const currentEmmetLang = includeLanguages.get(ActiveEditorLang);		
 		vscode.languages.getLanguages().then((availableLanguages)=>{
 			// console.log(langs);
+			availableLanguages = availableLanguages.sort();
 			const emmetLanguages : EmmetLang[] = [];
 			availableLanguages.forEach((lang)=>{
 				console.log(' - lang:',lang);
