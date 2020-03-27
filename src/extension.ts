@@ -54,9 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage('No editor is active');
 			return false;
 		}
+		const oldIncludeLanguages : object = vscode.workspace.getConfiguration('emmet').get<object>('includeLanguages') || {};
 		const ActiveEditorLang = editor.document.languageId;
 		const includeLanguages = vscode.workspace.getConfiguration('emmet.includeLanguages');
-		const currentEmmetLang = includeLanguages.get(ActiveEditorLang);
+		const currentEmmetLang = includeLanguages.get(ActiveEditorLang);		
 		vscode.languages.getLanguages().then((availableLanguages)=>{
 			// console.log(langs);
 			const emmetLanguages : EmmetLang[] = [];
@@ -82,7 +83,11 @@ export function activate(context: vscode.ExtensionContext) {
 					// 	editorConfig.update("fontFamily", fontString, true);
 					// }
 					console.log('user select emmet:', selection?.label);
-					vscode.workspace.getConfiguration('emmet').update('includeLanguages', { [ActiveEditorLang]: selection?.label }, vscode.ConfigurationTarget.Global);
+					if(selection?.label){
+						// vscode.workspace.getConfiguration('emmet').update('includeLanguages', { [ActiveEditorLang]: selection?.label }, vscode.ConfigurationTarget.Global);
+						const newIncludeLanguages = {...oldIncludeLanguages, [ActiveEditorLang]: selection?.label };
+						vscode.workspace.getConfiguration('emmet').update('includeLanguages', newIncludeLanguages, vscode.ConfigurationTarget.Global);
+					}
 				});
       
 			// await workspace.getConfiguration('emmet').update('includeLanguages', { 'javascript': 'html' }, ConfigurationTarget.Global)
